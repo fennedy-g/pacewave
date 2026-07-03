@@ -32,7 +32,6 @@ body{display:flex;min-height:100vh}
   <a onclick="showTab('books', this)">Books</a>
   <a onclick="showTab('categories', this)">Categories</a>
   <a onclick="showTab('homepage', this)">Homepage</a>
-  <a onclick="showTab('pages', this)">Pages</a>
   <a href="index.html">← View Site</a>
   <hr style="border-color:var(--border);margin:16px 0">
   <button class="btn-ghost" style="width:100%" onclick="exportData()">Export JSON</button>
@@ -74,11 +73,6 @@ body{display:flex;min-height:100vh}
     <div id="hp-new" class="card hidden"><p style="color:var(--muted);margin-bottom:12px">Tick books to show in New Arrivals</p><div id="newPick"></div></div>
     <button class="btn" style="margin-top:16px" onclick="saveHomepage()">Save Homepage</button>
   </section>
-
-  <section id="pages" class="hidden">
-    <div class="topbar"><h1>Pages</h1><button class="btn" onclick="openPageModal()">+ Add Page</button></div>
-    <div class="card"><table id="pagesTable"><thead><tr><th>Title</th><th>Slug</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-  </section>
 </main>
 
 <!-- MODALS -->
@@ -90,6 +84,7 @@ body{display:flex;min-height:100vh}
     <div class="row"><div><label>Category</label><select id="bCat"></select></div><div><label>Rating 0-5</label><input id="bRating" type="number" step="0.1" min="0" max="5"></div></div>
     <label>Cover URL</label><input id="bCoverUrl" placeholder="https://picsum.photos/300/400">
     <label>Or Upload Cover</label><input type="file" id="bCover" accept="image/*">
+    <label>Upload Book File (PDF)</label><input type="file" id="bFile" accept=".pdf,.epub">
     <label>Content Text</label><textarea id="bContent" rows="5" placeholder="Paste book content here"></textarea>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
       <button class="btn-ghost" onclick="closeModal('bookModal')">Cancel</button>
@@ -100,24 +95,11 @@ body{display:flex;min-height:100vh}
 
 <div class="modal" id="catModal">
   <div class="modal-box">
-    <h3 id="catModalTitle">Add Category</h3>
-    <input type="hidden" id="catId"><label>Name</label><input id="catName">
+    <h3>Add Category</h3>
+    <label>Category Name</label><input id="catName" placeholder="Enter category name">
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
       <button class="btn-ghost" onclick="closeModal('catModal')">Cancel</button>
-      <button class="btn" onclick="saveCat()">Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="pageModal">
-  <div class="modal-box">
-    <h3 id="pageModalTitle">Add Page</h3>
-    <input type="hidden" id="pageId">
-    <div class="row"><div><label>Title</label><input id="pTitle"></div><div><label>Slug e.g. about-us</label><input id="pSlug"></div></div>
-    <label>Content HTML</label><textarea id="pContent" rows="8"></textarea>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-      <button class="btn-ghost" onclick="closeModal('pageModal')">Cancel</button>
-      <button class="btn" onclick="savePage()">Save Page</button>
+      <button class="btn" onclick="saveCat()">Save Category</button>
     </div>
   </div>
 </div>
