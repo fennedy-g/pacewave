@@ -14,6 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderCategories();
   renderHomepage();
   renderPages();
+  injectModalStyles();
 });
 
 // Load admin data from localStorage
@@ -184,8 +185,8 @@ function openBookModal() {
   document.getElementById('bCoverUrl').value = '';
   document.getElementById('bRating').value = '';
   document.getElementById('bContent').value = '';
-  document.getElementById('bookModal').style.display = 'flex';
   populateCategorySelect();
+  document.getElementById('bookModal').classList.add('show');
 }
 
 function editBook(id) {
@@ -198,8 +199,8 @@ function editBook(id) {
   document.getElementById('bCoverUrl').value = book.cover;
   document.getElementById('bRating').value = book.rating;
   document.getElementById('bContent').value = book.content;
-  document.getElementById('bookModal').style.display = 'flex';
   populateCategorySelect(book.cat);
+  document.getElementById('bookModal').classList.add('show');
 }
 
 function saveBook() {
@@ -242,6 +243,7 @@ function saveBook() {
   saveAdminData();
   renderBooks();
   renderHomepage();
+  renderDashboard();
   closeModal('bookModal');
 }
 
@@ -260,12 +262,12 @@ function deleteBook(id) {
 function openCatModal() {
   document.getElementById('catId').value = '';
   document.getElementById('catName').value = '';
-  document.getElementById('catModal').style.display = 'flex';
+  document.getElementById('catModal').classList.add('show');
 }
 
 function editCat(name) {
   document.getElementById('catName').value = name;
-  document.getElementById('catModal').style.display = 'flex';
+  document.getElementById('catModal').classList.add('show');
 }
 
 function saveCat() {
@@ -294,7 +296,7 @@ function openPageModal() {
   document.getElementById('pTitle').value = '';
   document.getElementById('pSlug').value = '';
   document.getElementById('pContent').value = '';
-  document.getElementById('pageModal').style.display = 'flex';
+  document.getElementById('pageModal').classList.add('show');
 }
 
 function editPage(id) {
@@ -305,7 +307,7 @@ function editPage(id) {
   document.getElementById('pTitle').value = page.title;
   document.getElementById('pSlug').value = page.slug;
   document.getElementById('pContent').value = page.content;
-  document.getElementById('pageModal').style.display = 'flex';
+  document.getElementById('pageModal').classList.add('show');
 }
 
 function savePage() {
@@ -359,7 +361,7 @@ function saveHomepage() {
 }
 
 function closeModal(modalId) {
-  document.getElementById(modalId).style.display = 'none';
+  document.getElementById(modalId).classList.remove('show');
 }
 
 function populateCategorySelect(selected = '') {
@@ -404,16 +406,17 @@ function importData(event) {
   reader.readAsText(file);
 }
 
-// Add CSS to admin.html if not present
-document.addEventListener('DOMContentLoaded', () => {
+// Inject modal styles
+function injectModalStyles() {
   const style = document.createElement('style');
   style.textContent = `
     .hidden { display: none !important; }
-    .modal { display: none !important; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+    .modal.show { display: flex !important; }
     .modal-box { background: var(--card); padding: 24px; border-radius: 16px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
     .modal-box h3 { margin-bottom: 16px; }
     .modal-box label { display: block; margin: 12px 0 6px; font-weight: 600; }
-    .modal-box input, .modal-box textarea, .modal-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); border-radius: 8px; }
+    .modal-box input, .modal-box textarea, .modal-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); border-radius: 8px; box-sizing: border-box; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     table { width: 100%; border-collapse: collapse; margin-top: 16px; }
     table th, table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
@@ -422,4 +425,4 @@ document.addEventListener('DOMContentLoaded', () => {
     .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   `;
   document.head.appendChild(style);
-});
+}
