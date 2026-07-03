@@ -23,6 +23,12 @@ body{display:flex;min-height:100vh}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .topbar h1{margin:0;font-size:1.6rem}
+.section-control{background:var(--bg-elev);padding:16px;border-radius:10px;margin-bottom:12px}
+.section-control label{display:block;margin-bottom:8px;font-weight:600;font-size:0.9rem}
+.section-control input,.section-control textarea{width:100%;padding:8px;margin-bottom:8px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:6px;font-family:inherit;box-sizing:border-box}
+.section-control textarea{resize:vertical;min-height:80px}
+.checkbox-item{display:flex;align-items:center;gap:8px;margin:8px 0;padding:8px;background:var(--bg-elev);border-radius:6px;cursor:pointer}
+.checkbox-item input[type="checkbox"]{cursor:pointer}
 </style>
 </head>
 <body>
@@ -64,14 +70,64 @@ body{display:flex;min-height:100vh}
   </section>
 
   <section id="homepage" class="hidden">
-    <div class="topbar"><h1>Homepage</h1></div>
-    <div class="tabs">
-      <div class="tab active" onclick="hpTab('featured', this)">Featured Books</div>
-      <div class="tab" onclick="hpTab('new', this)">New Arrivals</div>
+    <div class="topbar"><h1>Homepage Management</h1></div>
+    
+    <!-- Hero Section Control -->
+    <div class="card">
+      <h3>Hero Section</h3>
+      <div class="section-control">
+        <label>Main Heading</label>
+        <input type="text" id="heroHeading" placeholder="e.g., Read at your own Pace">
+        <label>Hero Subtitle</label>
+        <textarea id="heroSubtitle" placeholder="e.g., Discover premium books..."></textarea>
+      </div>
     </div>
-    <div id="hp-featured" class="card"><p style="color:var(--muted);margin-bottom:12px">Tick books to show in Featured carousel</p><div id="featuredPick"></div></div>
-    <div id="hp-new" class="card hidden"><p style="color:var(--muted);margin-bottom:12px">Tick books to show in New Arrivals</p><div id="newPick"></div></div>
-    <button class="btn" style="margin-top:16px" onclick="saveHomepage()">Save Homepage</button>
+
+    <!-- Section Titles Control -->
+    <div class="card">
+      <h3>Section Titles</h3>
+      <div class="section-control">
+        <label>Featured Books Title</label>
+        <input type="text" id="sectionFeatured" placeholder="Featured Books">
+      </div>
+      <div class="section-control">
+        <label>New Arrivals Title</label>
+        <input type="text" id="sectionNew" placeholder="New Arrivals">
+      </div>
+      <div class="section-control">
+        <label>Categories Title</label>
+        <input type="text" id="sectionCategories" placeholder="Browse Categories">
+      </div>
+    </div>
+
+    <!-- Featured Books Selection -->
+    <div class="card">
+      <h3>Featured Books</h3>
+      <p style="color:var(--muted);margin-bottom:12px">Select up to 8 books to display in the featured carousel</p>
+      <div id="featuredPick"></div>
+    </div>
+
+    <!-- New Arrivals Selection -->
+    <div class="card">
+      <h3>New Arrivals</h3>
+      <p style="color:var(--muted);margin-bottom:12px">Select books to show in the New Arrivals section</p>
+      <div id="newPick"></div>
+    </div>
+
+    <!-- Floating Books Background -->
+    <div class="card">
+      <h3>Hero Background</h3>
+      <div class="section-control">
+        <label>Floating Books Animation (Enable/Disable)</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:8px">
+          <input type="checkbox" id="enableFloating" onchange="toggleFloatingBooks()">
+          <span>Enable floating books background animation</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <button class="btn" style="margin-top:16px;width:100%" onclick="saveHomepage()">💾 Save All Homepage Changes</button>
   </section>
 </main>
 
