@@ -2,7 +2,16 @@
 let adminData = {
   books: [],
   categories: [],
-  homepage: { featured: [], new: [] }
+  homepage: { 
+    featured: [], 
+    new: [],
+    heroHeading: "Read at your own Pace",
+    heroSubtitle: "Discover premium books. Clean reading, zero distractions, full control.",
+    sectionFeatured: "Featured Books",
+    sectionNew: "New Arrivals",
+    sectionCategories: "Browse Categories",
+    enableFloating: true
+  }
 };
 
 // Load data from localStorage on init
@@ -44,7 +53,16 @@ function initializeDefaultData() {
       {id:8,title:"Dune",author:"Frank Herbert",cat:"Fiction",rating:4.9,cover:"https://picsum.photos/seed/a8/300/400",content:"Epic science fiction.",file:""}
     ],
     categories: ["Fiction","Romance","Mystery","Science","Business","Self-Help","History","Education"],
-    homepage: { featured: [1,2,3,4,5], new: [3,4,5,6,7,8] }
+    homepage: { 
+      featured: [1,2,3,4,5], 
+      new: [3,4,5,6,7,8],
+      heroHeading: "Read at your own Pace",
+      heroSubtitle: "Discover premium books. Clean reading, zero distractions, full control.",
+      sectionFeatured: "Featured Books",
+      sectionNew: "New Arrivals",
+      sectionCategories: "Browse Categories",
+      enableFloating: true
+    }
   };
   saveAdminData();
 }
@@ -122,22 +140,40 @@ function renderCategories() {
 
 // Render Homepage Configuration
 function renderHomepage() {
+  // Load text inputs
+  const heroHeadingInput = document.getElementById('heroHeading');
+  const heroSubtitleInput = document.getElementById('heroSubtitle');
+  const sectionFeaturedInput = document.getElementById('sectionFeatured');
+  const sectionNewInput = document.getElementById('sectionNew');
+  const sectionCategoriesInput = document.getElementById('sectionCategories');
+  const enableFloatingCheckbox = document.getElementById('enableFloating');
+  
+  if (heroHeadingInput) heroHeadingInput.value = adminData.homepage.heroHeading || "Read at your own Pace";
+  if (heroSubtitleInput) heroSubtitleInput.value = adminData.homepage.heroSubtitle || "Discover premium books. Clean reading, zero distractions, full control.";
+  if (sectionFeaturedInput) sectionFeaturedInput.value = adminData.homepage.sectionFeatured || "Featured Books";
+  if (sectionNewInput) sectionNewInput.value = adminData.homepage.sectionNew || "New Arrivals";
+  if (sectionCategoriesInput) sectionCategoriesInput.value = adminData.homepage.sectionCategories || "Browse Categories";
+  if (enableFloatingCheckbox) enableFloatingCheckbox.checked = adminData.homepage.enableFloating !== false;
+  
+  // Render book selections
   const featured = document.getElementById('featuredPick');
   const newArrivals = document.getElementById('newPick');
   if (!featured || !newArrivals) return;
   
   featured.innerHTML = adminData.books.map(b => `
-    <label style="display:flex;align-items:center;gap:8px;margin:8px 0;cursor:pointer">
+    <div class="checkbox-item">
       <input type="checkbox" ${adminData.homepage.featured.includes(b.id) ? 'checked' : ''} onchange="toggleFeatured(${b.id})">
-      <span>${b.title}</span>
-    </label>
+      <img src="${b.cover}" style="width:32px;height:44px;border-radius:4px;object-fit:cover;">
+      <span>${b.title} - ${b.author}</span>
+    </div>
   `).join('');
   
   newArrivals.innerHTML = adminData.books.map(b => `
-    <label style="display:flex;align-items:center;gap:8px;margin:8px 0;cursor:pointer">
+    <div class="checkbox-item">
       <input type="checkbox" ${adminData.homepage.new.includes(b.id) ? 'checked' : ''} onchange="toggleNew(${b.id})">
-      <span>${b.title}</span>
-    </label>
+      <img src="${b.cover}" style="width:32px;height:44px;border-radius:4px;object-fit:cover;">
+      <span>${b.title} - ${b.author}</span>
+    </div>
   `).join('');
 }
 
@@ -304,9 +340,22 @@ function toggleNew(id) {
   else adminData.homepage.new.push(id);
 }
 
+function toggleFloatingBooks() {
+  const checkbox = document.getElementById('enableFloating');
+  adminData.homepage.enableFloating = checkbox.checked;
+}
+
 function saveHomepage() {
+  // Save text inputs
+  adminData.homepage.heroHeading = document.getElementById('heroHeading').value || "Read at your own Pace";
+  adminData.homepage.heroSubtitle = document.getElementById('heroSubtitle').value || "Discover premium books. Clean reading, zero distractions, full control.";
+  adminData.homepage.sectionFeatured = document.getElementById('sectionFeatured').value || "Featured Books";
+  adminData.homepage.sectionNew = document.getElementById('sectionNew').value || "New Arrivals";
+  adminData.homepage.sectionCategories = document.getElementById('sectionCategories').value || "Browse Categories";
+  adminData.homepage.enableFloating = document.getElementById('enableFloating').checked;
+  
   saveAdminData();
-  alert('Homepage saved!');
+  alert('✅ Homepage saved! Refresh the main site to see changes.');
 }
 
 function closeModal(modalId) {
@@ -365,7 +414,7 @@ function injectModalStyles() {
     .modal-box { background: var(--card); padding: 24px; border-radius: 16px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
     .modal-box h3 { margin-bottom: 16px; }
     .modal-box label { display: block; margin: 12px 0 6px; font-weight: 600; }
-    .modal-box input, .modal-box textarea, .modal-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); border-radius: 8px; box-sizing: border-box; }
+    .modal-box input, .modal-box textarea, .modal-box select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg-elev); color: var(--text); border-radius: 6px; box-sizing: border-box; font-family: inherit; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     table { width: 100%; border-collapse: collapse; margin-top: 16px; }
     table th, table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
