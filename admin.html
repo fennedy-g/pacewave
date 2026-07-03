@@ -19,6 +19,10 @@ body{display:flex;min-height:100vh}
 .kpi{padding:20px}.kpi h3{font-size:.9rem;color:var(--muted);margin-bottom:6px}
 .kpi h2{font-size:1.8rem}
 .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.topbar h1{margin:0;font-size:1.6rem}
 </style>
 </head>
 <body>
@@ -33,7 +37,7 @@ body{display:flex;min-height:100vh}
   <hr style="border-color:var(--border);margin:16px 0">
   <button class="btn-ghost" style="width:100%" onclick="exportData()">Export JSON</button>
   <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-  <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="importFile.click()">Import JSON</button>
+  <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="document.getElementById('importFile').click()">Import JSON</button>
 </aside>
 
 <main class="main">
@@ -120,4 +124,4 @@ body{display:flex;min-height:100vh}
 
 <script src="admin.js"></script>
 </body>
-  </html>
+</html>
