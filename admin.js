@@ -196,7 +196,7 @@ function saveBook() {
   const fileInput = document.getElementById('bFile');
   
   if (!title || !author || !cat) {
-    alert('Please fill in all required fields');
+    alert('Please fill in all required fields (Title, Author, Category)');
     return;
   }
   
@@ -268,12 +268,18 @@ function editCat(name) {
 
 function saveCat() {
   const name = document.getElementById('catName').value.trim();
-  if (!name) { alert('Category name required'); return; }
+  if (!name) { 
+    alert('Category name required'); 
+    return; 
+  }
   
   if (!adminData.categories.includes(name)) {
     adminData.categories.push(name);
     saveAdminData();
     renderCategories();
+    renderBooks();
+  } else {
+    alert('Category already exists');
   }
   closeModal('catModal');
 }
