@@ -2,8 +2,7 @@
 let adminData = {
   books: [],
   categories: [],
-  homepage: { featured: [], new: [] },
-  pages: []
+  homepage: { featured: [], new: [] }
 };
 
 // Load data from localStorage on init
@@ -13,7 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
   renderBooks();
   renderCategories();
   renderHomepage();
-  renderPages();
   injectModalStyles();
 });
 
@@ -36,18 +34,17 @@ function loadAdminData() {
 function initializeDefaultData() {
   adminData = {
     books: [
-      {id:1,title:"Atomic Habits",author:"James Clear",cat:"Self-Help",rating:4.8,cover:"https://picsum.photos/seed/a1/300/400",content:"Habits are the compound interest of self-improvement."},
-      {id:2,title:"Project Hail Mary",author:"Andy Weir",cat:"Science",rating:4.9,cover:"https://picsum.photos/seed/a2/300/400",content:"Space exploration meets survival."},
-      {id:3,title:"The Silent Patient",author:"Alex Michaelides",cat:"Mystery",rating:4.6,cover:"https://picsum.photos/seed/a3/300/400",content:"A psychological thriller."},
-      {id:4,title:"Deep Work",author:"Cal Newport",cat:"Business",rating:4.7,cover:"https://picsum.photos/seed/a4/300/400",content:"Focus in a distracted world."},
-      {id:5,title:"Sapiens",author:"Yuval Noah Harari",cat:"History",rating:4.9,cover:"https://picsum.photos/seed/a5/300/400",content:"A brief history of humankind."},
-      {id:6,title:"Educated",author:"Tara Westover",cat:"Education",rating:4.8,cover:"https://picsum.photos/seed/a6/300/400",content:"A memoir of learning."},
-      {id:7,title:"The Love Hypothesis",author:"Ali Hazelwood",cat:"Romance",rating:4.5,cover:"https://picsum.photos/seed/a7/300/400",content:"Fake dating turns real."},
-      {id:8,title:"Dune",author:"Frank Herbert",cat:"Fiction",rating:4.9,cover:"https://picsum.photos/seed/a8/300/400",content:"Epic science fiction."}
+      {id:1,title:"Atomic Habits",author:"James Clear",cat:"Self-Help",rating:4.8,cover:"https://picsum.photos/seed/a1/300/400",content:"Habits are the compound interest of self-improvement.",file:""},
+      {id:2,title:"Project Hail Mary",author:"Andy Weir",cat:"Science",rating:4.9,cover:"https://picsum.photos/seed/a2/300/400",content:"Space exploration meets survival.",file:""},
+      {id:3,title:"The Silent Patient",author:"Alex Michaelides",cat:"Mystery",rating:4.6,cover:"https://picsum.photos/seed/a3/300/400",content:"A psychological thriller.",file:""},
+      {id:4,title:"Deep Work",author:"Cal Newport",cat:"Business",rating:4.7,cover:"https://picsum.photos/seed/a4/300/400",content:"Focus in a distracted world.",file:""},
+      {id:5,title:"Sapiens",author:"Yuval Noah Harari",cat:"History",rating:4.9,cover:"https://picsum.photos/seed/a5/300/400",content:"A brief history of humankind.",file:""},
+      {id:6,title:"Educated",author:"Tara Westover",cat:"Education",rating:4.8,cover:"https://picsum.photos/seed/a6/300/400",content:"A memoir of learning.",file:""},
+      {id:7,title:"The Love Hypothesis",author:"Ali Hazelwood",cat:"Romance",rating:4.5,cover:"https://picsum.photos/seed/a7/300/400",content:"Fake dating turns real.",file:""},
+      {id:8,title:"Dune",author:"Frank Herbert",cat:"Fiction",rating:4.9,cover:"https://picsum.photos/seed/a8/300/400",content:"Epic science fiction.",file:""}
     ],
     categories: ["Fiction","Romance","Mystery","Science","Business","Self-Help","History","Education"],
-    homepage: { featured: [1,2,3,4,5], new: [3,4,5,6,7,8] },
-    pages: []
+    homepage: { featured: [1,2,3,4,5], new: [3,4,5,6,7,8] }
   };
   saveAdminData();
 }
@@ -144,23 +141,6 @@ function renderHomepage() {
   `).join('');
 }
 
-// Render Pages Table
-function renderPages() {
-  const tbody = document.querySelector('#pagesTable tbody');
-  if (!tbody) return;
-  
-  tbody.innerHTML = adminData.pages.map(p => `
-    <tr>
-      <td>${p.title}</td>
-      <td>${p.slug}</td>
-      <td>
-        <button class="btn-ghost" onclick="editPage(${p.id})" style="padding:4px 8px;font-size:0.85rem">Edit</button>
-        <button class="btn-ghost" onclick="deletePage(${p.id})" style="padding:4px 8px;font-size:0.85rem;color:#ef4444">Delete</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
 // Tab Navigation
 function showTab(tab, el) {
   document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
@@ -185,6 +165,7 @@ function openBookModal() {
   document.getElementById('bCoverUrl').value = '';
   document.getElementById('bRating').value = '';
   document.getElementById('bContent').value = '';
+  document.getElementById('bFile').value = '';
   populateCategorySelect();
   document.getElementById('bookModal').classList.add('show');
 }
@@ -199,6 +180,7 @@ function editBook(id) {
   document.getElementById('bCoverUrl').value = book.cover;
   document.getElementById('bRating').value = book.rating;
   document.getElementById('bContent').value = book.content;
+  document.getElementById('bFile').value = '';
   populateCategorySelect(book.cat);
   document.getElementById('bookModal').classList.add('show');
 }
@@ -211,40 +193,55 @@ function saveBook() {
   const rating = parseFloat(document.getElementById('bRating').value) || 0;
   const cover = document.getElementById('bCoverUrl').value;
   const content = document.getElementById('bContent').value;
+  const fileInput = document.getElementById('bFile');
   
   if (!title || !author || !cat) {
     alert('Please fill in all required fields');
     return;
   }
   
-  if (id) {
-    const book = adminData.books.find(b => b.id === parseInt(id));
-    if (book) {
-      book.title = title;
-      book.author = author;
-      book.cat = cat;
-      book.rating = rating;
-      book.cover = cover || book.cover;
-      book.content = content;
+  const processBook = (fileUrl) => {
+    if (id) {
+      const book = adminData.books.find(b => b.id === parseInt(id));
+      if (book) {
+        book.title = title;
+        book.author = author;
+        book.cat = cat;
+        book.rating = rating;
+        book.cover = cover || book.cover;
+        book.content = content;
+        if (fileUrl) book.file = fileUrl;
+      }
+    } else {
+      const newId = Math.max(...adminData.books.map(b => b.id), 0) + 1;
+      adminData.books.push({
+        id: newId,
+        title,
+        author,
+        cat,
+        rating,
+        cover: cover || 'https://picsum.photos/300/400',
+        content,
+        file: fileUrl || ''
+      });
     }
-  } else {
-    const newId = Math.max(...adminData.books.map(b => b.id), 0) + 1;
-    adminData.books.push({
-      id: newId,
-      title,
-      author,
-      cat,
-      rating,
-      cover: cover || 'https://picsum.photos/300/400',
-      content
-    });
-  }
+    
+    saveAdminData();
+    renderBooks();
+    renderHomepage();
+    renderDashboard();
+    closeModal('bookModal');
+  };
   
-  saveAdminData();
-  renderBooks();
-  renderHomepage();
-  renderDashboard();
-  closeModal('bookModal');
+  if (fileInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      processBook(e.target.result);
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    processBook('');
+  }
 }
 
 function deleteBook(id) {
@@ -260,7 +257,6 @@ function deleteBook(id) {
 }
 
 function openCatModal() {
-  document.getElementById('catId').value = '';
   document.getElementById('catName').value = '';
   document.getElementById('catModal').classList.add('show');
 }
@@ -287,59 +283,6 @@ function deleteCat(name) {
     adminData.categories = adminData.categories.filter(c => c !== name);
     saveAdminData();
     renderCategories();
-  }
-}
-
-function openPageModal() {
-  document.getElementById('pageId').value = '';
-  document.getElementById('pageModalTitle').innerText = 'Add Page';
-  document.getElementById('pTitle').value = '';
-  document.getElementById('pSlug').value = '';
-  document.getElementById('pContent').value = '';
-  document.getElementById('pageModal').classList.add('show');
-}
-
-function editPage(id) {
-  const page = adminData.pages.find(p => p.id === id);
-  if (!page) return;
-  document.getElementById('pageId').value = id;
-  document.getElementById('pageModalTitle').innerText = 'Edit Page';
-  document.getElementById('pTitle').value = page.title;
-  document.getElementById('pSlug').value = page.slug;
-  document.getElementById('pContent').value = page.content;
-  document.getElementById('pageModal').classList.add('show');
-}
-
-function savePage() {
-  const id = document.getElementById('pageId').value;
-  const title = document.getElementById('pTitle').value;
-  const slug = document.getElementById('pSlug').value;
-  const content = document.getElementById('pContent').value;
-  
-  if (!title || !slug) { alert('Title and slug required'); return; }
-  
-  if (id) {
-    const page = adminData.pages.find(p => p.id === parseInt(id));
-    if (page) {
-      page.title = title;
-      page.slug = slug;
-      page.content = content;
-    }
-  } else {
-    const newId = Math.max(...(adminData.pages.map(p => p.id) || [0]), 0) + 1;
-    adminData.pages.push({ id: newId, title, slug, content });
-  }
-  
-  saveAdminData();
-  renderPages();
-  closeModal('pageModal');
-}
-
-function deletePage(id) {
-  if (confirm('Delete this page?')) {
-    adminData.pages = adminData.pages.filter(p => p.id !== id);
-    saveAdminData();
-    renderPages();
   }
 }
 
