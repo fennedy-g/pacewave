@@ -38,7 +38,7 @@
         
         <div class="search-wrap">
           <div class="search glass">
-            <input type="text" id="searchInput" placeholder="Search by title, author, or category..." oninput="liveSearchDropdown(this.value)" onkeydown="if(event.key==='Enter'){ commitSearch(this.value) }" autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search by title, author, or category..." oninput="liveSearchDropdown(this.value)" onkeydown="if(event.key==='Enter'){ commitSearch(this.value) }">
             <button class="btn btn-search" onclick="commitSearch(document.getElementById('searchInput').value)">Search</button>
           </div>
           <div class="search-results glass" id="searchResults" style="display:none"></div>
@@ -129,10 +129,12 @@
     </div>
   </div>
   <p class="copy">© 2026 PaceWave. All rights reserved.</p>
+  <!-- Hidden Admin Button -->
+  <button class="admin-btn" id="adminBtn" onclick="goToAdmin()" title="Admin Portal">▪️</button>
 </footer>
 
 <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script src="app.js"></script>
 </body>
-      </html>
+</html>

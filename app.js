@@ -1,12 +1,12 @@
 const books = [
-  {id:1,title:"Atomic Habits",author:"James Clear",cat:"Self-Help",rating:4.8,cover:"https://picsum.photos/seed/a1/300/400",content:"Habits are the compound interest of self-improvement. You do not rise to the level of your goals. You fall to the level of your systems. ".repeat(20)},
-  {id:2,title:"Project Hail Mary",author:"Andy Weir",cat:"Science",rating:4.9,cover:"https://picsum.photos/seed/a2/300/400",content:"Space exploration meets survival in this thrilling adventure. ".repeat(20)},
-  {id:3,title:"The Silent Patient",author:"Alex Michaelides",cat:"Mystery",rating:4.6,cover:"https://picsum.photos/seed/a3/300/400",content:"A psychological thriller that keeps you guessing until the final page. ".repeat(20)},
-  {id:4,title:"Deep Work",author:"Cal Newport",cat:"Business",rating:4.7,cover:"https://picsum.photos/seed/a4/300/400",content:"Focus in a distracted world is a rare and valuable skill. ".repeat(20)},
-  {id:5,title:"Sapiens",author:"Yuval Noah Harari",cat:"History",rating:4.9,cover:"https://picsum.photos/seed/a5/300/400",content:"A brief history of humankind from the age of hunter-gatherers to the present. ".repeat(20)},
-  {id:6,title:"Educated",author:"Tara Westover",cat:"Education",rating:4.8,cover:"https://picsum.photos/seed/a6/300/400",content:"A memoir of learning and self-discovery against all odds. ".repeat(20)},
-  {id:7,title:"The Love Hypothesis",author:"Ali Hazelwood",cat:"Romance",rating:4.5,cover:"https://picsum.photos/seed/a7/300/400",content:"Fake dating turns into something real in this charming romance. ".repeat(20)},
-  {id:8,title:"Dune",author:"Frank Herbert",cat:"Fiction",rating:4.9,cover:"https://picsum.photos/seed/a8/300/400",content:"Desert planet politics and intrigue in this epic science fiction masterpiece. ".repeat(20)},
+  {id:1,title:"Atomic Habits",author:"James Clear",cat:"Self-Help",rating:4.8,cover:"https://picsum.photos/seed/a1/300/400",content:"Habits are the compound interest of self-improvement. You do not...".repeat(200)},
+  {id:2,title:"Project Hail Mary",author:"Andy Weir",cat:"Science",rating:4.9,cover:"https://picsum.photos/seed/a2/300/400",content:"Space exploration meets survival in this thrilling adventure. ".repeat(200)},
+  {id:3,title:"The Silent Patient",author:"Alex Michaelides",cat:"Mystery",rating:4.6,cover:"https://picsum.photos/seed/a3/300/400",content:"A psychological thriller that keeps you guessing until...".repeat(200)},
+  {id:4,title:"Deep Work",author:"Cal Newport",cat:"Business",rating:4.7,cover:"https://picsum.photos/seed/a4/300/400",content:"Focus in a distracted world is a rare and valuable skill. ".repeat(200)},
+  {id:5,title:"Sapiens",author:"Yuval Noah Harari",cat:"History",rating:4.9,cover:"https://picsum.photos/seed/a5/300/400",content:"A brief history of humankind from the age of hunter-gatherers to...".repeat(200)},
+  {id:6,title:"Educated",author:"Tara Westover",cat:"Education",rating:4.8,cover:"https://picsum.photos/seed/a6/300/400",content:"A memoir of learning and self-discovery against all odds. ".repeat(200)},
+  {id:7,title:"The Love Hypothesis",author:"Ali Hazelwood",cat:"Romance",rating:4.5,cover:"https://picsum.photos/seed/a7/300/400",content:"Fake dating turns into something real in this charming rom...".repeat(200)},
+  {id:8,title:"Dune",author:"Frank Herbert",cat:"Fiction",rating:4.9,cover:"https://picsum.photos/seed/a8/300/400",content:"Desert planet politics and intrigue in this epic science fiction masterpi...".repeat(200)},
 ];
 
 const categories = ["Fiction","Romance","Mystery","Science","Business","Self-Help","History","Education"];
@@ -26,6 +26,10 @@ window.onload = () => {
     if(!e.target.closest('.search-wrap')) document.getElementById('searchResults').style.display = 'none';
   });
 };
+
+function goToAdmin(){
+  window.location.href = 'admin.html';
+}
 
 function showView(view){
   document.getElementById('homeView').style.display = view==='home' ? 'block' : 'none';
@@ -153,7 +157,7 @@ function createFloatingBooks(){
       else if(t.x >= bounds.width - t.w){ t.x = bounds.width - t.w; t.vx *= -1; }
       if(t.y <= 0){ t.y = 0; t.vy *= -1; } 
       else if(t.y >= bounds.height - t.h){ t.y = bounds.height - t.h; t.vy *= -1; }
-      t.el.style.transform = `translate(${t.x}px, ${t.y}px)`; // No rotate
+      t.el.style.transform = `translate(${t.x}px, ${t.y}px)`;
     });
     requestAnimationFrame(animate);
   }
