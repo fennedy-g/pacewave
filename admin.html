@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaceWave Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+body{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--card);border-right:1px solid var(--border);padding:20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar h2{font-size:1.4rem;margin-bottom:20px;color:#a78bfa}
+.sidebar a{display:block;padding:10px 12px;margin:4px 0;border-radius:10px;color:var(--muted);text-decoration:none;cursor:pointer}
+.sidebar a.active,.sidebar a:hover{background:var(--glass);color:var(--text)}
+.main{flex:1;padding:24px;overflow-y:auto}
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{padding:10px 14px;cursor:pointer;color:var(--muted)}
+.tab.active{border-bottom:2px solid var(--accent);color:var(--text)}
+.kpi{padding:20px}.kpi h3{font-size:.9rem;color:var(--muted);margin-bottom:6px}
+.kpi h2{font-size:1.8rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <h2>PaceWave</h2>
+  <a class="active" onclick="showTab('dashboard', this)">Dashboard</a>
+  <a onclick="showTab('books', this)">Books</a>
+  <a onclick="showTab('categories', this)">Categories</a>
+  <a onclick="showTab('homepage', this)">Homepage</a>
+  <a onclick="showTab('pages', this)">Pages</a>
+  <a href="index.html">← View Site</a>
+  <hr style="border-color:var(--border);margin:16px 0">
+  <button class="btn-ghost" style="width:100%" onclick="exportData()">Export JSON</button>
+  <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+  <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="importFile.click()">Import JSON</button>
+</aside>
+
+<main class="main">
+  <section id="dashboard">
+    <div class="topbar"><h1>Dashboard</h1></div>
+    <div class="grid-4">
+      <div class="card kpi"><h3>Total Books</h3><h2 id="kpiBooks">0</h2></div>
+      <div class="card kpi"><h3>Total Categories</h3><h2 id="kpiCats">0</h2></div>
+      <div class="card kpi"><h3>Total Views</h3><h2 id="kpiViews">0</h2></div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <h3>Recent Books</h3>
+      <table id="recentTable"><thead><tr><th>Cover</th><th>Title</th><th>Author</th><th>Views</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="books" class="hidden">
+    <div class="topbar"><h1>Books</h1><button class="btn" onclick="openBookModal()">+ Add Book</button></div>
+    <div class="card"><table id="booksTable"><thead><tr><th>Cover</th><th>Title</th><th>Author</th><th>Category</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="categories" class="hidden">
+    <div class="topbar"><h1>Categories</h1><button class="btn" onclick="openCatModal()">+ Add Category</button></div>
+    <div class="card"><table id="catsTable"><thead><tr><th>Name</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="homepage" class="hidden">
+    <div class="topbar"><h1>Homepage</h1></div>
+    <div class="tabs">
+      <div class="tab active" onclick="hpTab('featured', this)">Featured Books</div>
+      <div class="tab" onclick="hpTab('new', this)">New Arrivals</div>
+    </div>
+    <div id="hp-featured" class="card"><p style="color:var(--muted);margin-bottom:12px">Tick books to show in Featured carousel</p><div id="featuredPick"></div></div>
+    <div id="hp-new" class="card hidden"><p style="color:var(--muted);margin-bottom:12px">Tick books to show in New Arrivals</p><div id="newPick"></div></div>
+    <button class="btn" style="margin-top:16px" onclick="saveHomepage()">Save Homepage</button>
+  </section>
+
+  <section id="pages" class="hidden">
+    <div class="topbar"><h1>Pages</h1><button class="btn" onclick="openPageModal()">+ Add Page</button></div>
+    <div class="card"><table id="pagesTable"><thead><tr><th>Title</th><th>Slug</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+
+<!-- MODALS -->
+<div class="modal" id="bookModal">
+  <div class="modal-box">
+    <h3 id="bookModalTitle">Add Book</h3>
+    <input type="hidden" id="bookId">
+    <div class="row"><div><label>Title</label><input id="bTitle"></div><div><label>Author</label><input id="bAuthor"></div></div>
+    <div class="row"><div><label>Category</label><select id="bCat"></select></div><div><label>Rating 0-5</label><input id="bRating" type="number" step="0.1" min="0" max="5"></div></div>
+    <label>Cover URL</label><input id="bCoverUrl" placeholder="https://picsum.photos/300/400">
+    <label>Or Upload Cover</label><input type="file" id="bCover" accept="image/*">
+    <label>Content Text</label><textarea id="bContent" rows="5" placeholder="Paste book content here"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn-ghost" onclick="closeModal('bookModal')">Cancel</button>
+      <button class="btn" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="catModal">
+  <div class="modal-box">
+    <h3 id="catModalTitle">Add Category</h3>
+    <input type="hidden" id="catId"><label>Name</label><input id="catName">
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn-ghost" onclick="closeModal('catModal')">Cancel</button>
+      <button class="btn" onclick="saveCat()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="pageModal">
+  <div class="modal-box">
+    <h3 id="pageModalTitle">Add Page</h3>
+    <input type="hidden" id="pageId">
+    <div class="row"><div><label>Title</label><input id="pTitle"></div><div><label>Slug e.g. about-us</label><input id="pSlug"></div></div>
+    <label>Content HTML</label><textarea id="pContent" rows="8"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn-ghost" onclick="closeModal('pageModal')">Cancel</button>
+      <button class="btn" onclick="savePage()">Save Page</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+  </html>
